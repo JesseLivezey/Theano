@@ -5,7 +5,7 @@ _logger = logging.getLogger(__name__)
 import theano
 from theano import Apply
 from theano import gof
-from theano.tensor import as_tensor_variable
+from theano.tensor import as_tensor_variable, TensorType
 from theano.tensor.blas_headers import blas_header_text
 from theano.tensor.blas import ldflags
 
@@ -378,8 +378,8 @@ class CpuCorrMM(BaseCpuCorrMM):
 
         broadcastable = [img.type.broadcastable[0], kern.type.broadcastable[0],
                          False, False]
-        # TODO broadcastable checks
-        return Apply(self, [img, kern], [img.type()])
+        dtype = img.type.dtype
+        return Apply(self, [img, kern], [TensorType(dtype, broadcastable)()])
 
     def infer_shape(self, node, input_shape):
         if self.border_mode == "half":
@@ -461,8 +461,9 @@ class CpuCorrMM_gradWeights(BaseCpuCorrMM):
 
         broadcastable = [topgrad.type.broadcastable[1], img.type.broadcastable[1],
                          False, False]
-        # TODO broadcastable checks
-        return Apply(self, [img, topgrad] + height_width, [img.type()])
+        dtype = img.type.dtype
+        return Apply(self, [img, topgrad] + height_width,
+                     [TensorType(dtype, broadcastable)()])
 
     def infer_shape(self, node, input_shape):
         if self.border_mode == "half":
@@ -549,8 +550,9 @@ class CpuCorrMM_gradInputs(BaseCpuCorrMM):
 
         broadcastable = [topgrad.type.broadcastable[0], kern.type.broadcastable[1],
                          False, False]
-        # TODO broadcastable checks
-        return Apply(self, [kern, topgrad] + height_width, [kern.type()])
+        dtype = kern.type.dtype
+        return Apply(self, [kern, topgrad] + height_width,
+                     [TensorType(dtype, broadcastable)()])
 
     def infer_shape(self, node, input_shape):
         if self.border_mode == "half":
