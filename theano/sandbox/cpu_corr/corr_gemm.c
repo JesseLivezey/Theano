@@ -113,6 +113,11 @@ PyArrayObject* corrMM(PyArrayObject* bottom,
                 PyArray_STRIDES(bottom)[3]);
         return NULL;
     }
+    if (PyArray_TYPE(bottom) != %(float_typenum)s)
+    {
+        PyErr_SetString(PyExc_ValueError, "CpuCorrMM received bottom with wrong type.");
+        return NULL;
+    }
     
     if (PyArray_NDIM(weight) != 4)
     {
@@ -130,6 +135,11 @@ PyArrayObject* corrMM(PyArrayObject* bottom,
                 PyArray_STRIDES(weight)[3]);
         return NULL;
     }
+    if (PyArray_TYPE(weight) != %(float_typenum)s)
+    {
+        PyErr_SetString(PyExc_ValueError, "CpuCorrMM received weight with wrong type.");
+        return NULL;
+    }
 
     if (PyArray_NDIM(top) != 4)
     {
@@ -145,6 +155,11 @@ PyArrayObject* corrMM(PyArrayObject* bottom,
                 PyArray_STRIDES(top)[1],
                 PyArray_STRIDES(top)[2],
                 PyArray_STRIDES(top)[3]);
+        return NULL;
+    }
+    if (PyArray_TYPE(top) != %(float_typenum)s)
+    {
+        PyErr_SetString(PyExc_ValueError, "CpuCorrMM received top with wrong type.");
         return NULL;
     }
 
@@ -202,7 +217,6 @@ PyArrayObject* corrMM(PyArrayObject* bottom,
     // Define some useful variables
     const int bottom_stride = PyArray_STRIDES(bottom)[0]/%(n_bytes)f;
     const int top_stride = PyArray_STRIDES(top)[0]/%(n_bytes)f;
-    // TODO More careful type checking for all arrays
     const int K_ = col_dim[0];
     const int N_ = col_dim[1];
     const int M_ = nFilters;

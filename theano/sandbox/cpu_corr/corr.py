@@ -106,11 +106,13 @@ class BaseCpuCorrMM(gof.Op):
         if dtype == 'float32':
             sub['gemm'] = 'sgemm_'
             sub['float_type'] = 'npy_float'
+            sub['float_typenum'] = 'NPY_FLOAT'
             sub['n_bytes'] = 4
             sub['c_float_type'] = 'float'
         else:
             sub['gemm'] = 'dgemm_'
             sub['float_type'] = 'npy_double'
+            sub['float_typenum'] = 'NPY_DOUBLE'
             sub['n_bytes'] = 8
             sub['c_float_type'] = 'double'
         files = ['corr_gemm.c']
