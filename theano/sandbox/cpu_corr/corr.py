@@ -479,7 +479,7 @@ class CpuCorrMM_gradWeights(BaseCpuCorrMM):
         topshp = input_shape[1]
         bsize, ssize, imshp = imshp[0], imshp[1], list(imshp[2:])
         bsize, nkern, topshp = topshp[0], topshp[1], list(topshp[2:])
-        height_width = node.inputs[-1]
+        height_width = node.inputs[-2:]
         if ((dH != 1) or (padH == -1)):
             # vertical subsampling or half padding, kernel height is specified
             kH = height_width[0]
@@ -567,7 +567,7 @@ class CpuCorrMM_gradInputs(BaseCpuCorrMM):
         topshp = input_shape[1]
         nkern, ssize, kshp = kshp[0], kshp[1], list(kshp[2:])
         bsize, nkern, topshp = topshp[0], topshp[1], list(topshp[2:])
-        height_width = node.inputs[-1]
+        height_width = node.inputs[-2:]
         if dH != 1:
             out_shp0 = height_width[0]
         else:
